@@ -57,6 +57,7 @@
             }
             var fechaActual = new Date();
             alert("Registro exitoso.\nFecha de registro: " + fechaActual);
+            
             return true;
         }
     </script>

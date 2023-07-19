@@ -54,6 +54,9 @@ namespace WebApplication1
                 mensaje += "Ciudad: " + ciudad + Environment.NewLine;
                 mensaje += "Requerimientos: " + Environment.NewLine + requerimientos;
 
+                crearSesion(nombre, apellido, sexo, email, direccion, ciudad, requerimientos);
+                crearCookie(nombre, apellido, sexo, email, direccion, ciudad, requerimientos);
+                Response.Redirect("Auxiliar");
                 enviarInformacion(nombre,apellido,sexo,email,direccion,ciudad,requerimientos);
 
                 MostrarContenido.Text = mensaje;
@@ -72,6 +75,31 @@ namespace WebApplication1
         {
             Service2Client cliente = new Service2Client();
             cliente.tomarInformacion(nombre,apellido,sexo,email,dir,ciudad,reque);
+        }
+        private void crearSesion(string nombre, string apellido, string sexo, string email, string dir, string ciudad, string reque)
+        {
+            Session["Nombre"] = nombre;
+            Session["Apellido"] = apellido;
+            Session["Sexo"] = sexo;
+            Session["Email"] = email;
+            Session["Direccion"] = dir;
+            Session["Ciudad"] = ciudad;
+            Session["Requerimientos"] = reque;
+        }
+        private void crearCookie(string nombre, string apellido, string sexo, string email, string dir, string ciudad, string reque)
+        {
+            HttpCookie datosUsuario = new HttpCookie("SesionUsuario");
+
+            datosUsuario["Nombre"] = nombre;
+            datosUsuario["Apellido"] = apellido;
+            datosUsuario["Sexo"] = sexo;
+            datosUsuario["Email"] = email;
+            datosUsuario["Direccion"] = dir;
+            datosUsuario["Ciudad"] = ciudad;
+            datosUsuario["Requerimientos"] = reque;
+
+            datosUsuario.Expires = DateTime.Now.AddMinutes(2);
+            Response.Cookies.Add(datosUsuario);
         }
     }
 }
