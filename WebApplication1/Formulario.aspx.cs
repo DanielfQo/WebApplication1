@@ -7,6 +7,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using WebApplication1.ServiceReference1;
 using WebApplication1.ServiceReference2;
+using System.Data.SqlClient;
+using System.Web.Services;
 
 namespace WebApplication1
 {
@@ -101,5 +103,32 @@ namespace WebApplication1
             datosUsuario.Expires = DateTime.Now.AddMinutes(2);
             Response.Cookies.Add(datosUsuario);
         }
+
+        [WebMethod]
+        public static bool verificarNombreApellido(string nombre, string apellido)
+        {
+            bool noexiste = false;
+            string connectionString = "Data Source=(localdb)\\ProjectModels;Initial Catalog=BaseDeDatos;Integrated Security=True;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string consulta = "SELECT COUNT(*) FROM dbo.DataAlumnos WHERE Nombre = @Nombre AND Apellidos = @Apellidos";
+                using (SqlCommand command = new SqlCommand(consulta, connection))
+                {
+                    command.Parameters.AddWithValue("@Nombre", nombre);
+                    command.Parameters.AddWithValue("@Apellidos", apellido);
+                    int count = Convert.ToInt32(command.ExecuteScalar());
+                    if (count > 0)
+                    {
+                        noexiste = true;
+                        return noexiste;
+                    }
+                }
+                
+            }
+            return noexiste;
+        }
     }
+    
 }

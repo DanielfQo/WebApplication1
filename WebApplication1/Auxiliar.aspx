@@ -6,6 +6,30 @@
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
+    <script src="./Scripts/jquery-3.4.1.js"></script>
+    <script>
+        function callAjax() {
+            let send = $('#datosCookies').val();
+            $.ajax({
+            url: 'Auxiliar.aspx/getInformacion',
+            type: 'POST',
+            async: true,
+            data: '{ valor:"' + send + '"}',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: exito
+            });
+            return false;
+        }
+
+        function exito(data) {
+            var returnS = data.d;
+            $('#TextBoxAjax').val(data.d);
+            $('#TextBoxAjax').css("visibility", "visible");
+            return false;
+        }
+    </script> 
+    
 </head>
 <body>
     <form id="form1" runat="server">
@@ -38,6 +62,12 @@
         </div>
         <div>
             <asp:TextBox ID="datosCookies" runat="server" TextMode="MultiLine" Rows="8" Columns="72" Wrap="true" text="" ></asp:TextBox>
+        </div>
+        <div>
+            <asp:Button ID="BotonAjax" runat="server" Text="Ajax" OnClientClick="return callAjax();" />
+        </div>
+        <div >
+            <asp:TextBox ID="TextBoxAjax" runat="server" TextMode="MultiLine" Rows="8" Columns="72" Wrap="true" Style="visibility: hidden"></asp:TextBox>
         </div>
 
     </form>

@@ -6,6 +6,7 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Segundo Laboratorio</title>
+    <script src="./Scripts/jquery-3.4.1.js"></script>
     <script type = "text/javascript">
         function limpiar_contenido() {
             var vacio = '';
@@ -59,6 +60,29 @@
             alert("Registro exitoso.\nFecha de registro: " + fechaActual);
             
             return true;
+        }
+        function verificarNombreApellido() {
+            var nombre = $('#InputNombre').val();
+            var apellido = $('#InputApellido').val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'Formulario.aspx/verificarNombreApellido',
+                data: JSON.stringify({ nombre: nombre, apellido: apellido }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.d) {
+                        $('#resultado').text('Alumno ya registrado');
+                    } else {
+                        $('#resultado').text('Correcto');
+                    }
+                    console.log(data);
+                },
+                error: function (xhr, status, error) {
+                    $('#resultado').text('Error al verificar el nombre y apellido: ' + error);
+                }
+            });
         }
     </script>
     <style>
@@ -157,6 +181,7 @@
         <h1>Registro de Alumnos:</h1>
     </div>
     <form id="ButtonsEnviarLimpiar" runat="server">
+        <asp:ScriptManager runat="server" EnablePageMethods="true" EnablePartialRendering="true"></asp:ScriptManager>
         <section class="BoxNombre">
             <div class="BoxTextNombre">
                 <label for="InputNombre">Nombre:</label>
@@ -170,9 +195,10 @@
                 <label for="InputApellido">Apellidos:</label>
             </div>
             <div class="BoxInputApellido">
-                <asp:TextBox runat="server"  ID="InputApellido" title="Ingrese sus apellidos" />
+                <asp:TextBox runat="server"  ID="InputApellido" title="Ingrese sus apellidos" onblur="return verificarNombreApellido();" />
             </div>
         </section>
+        <div id="resultado"></div>
         <section class="BoxSexo">
             <div class="BoxTextSexo">
                 <label>Sexo:</label>
